@@ -1,0 +1,1 @@
+proc hi {} { puts "Hi"}
