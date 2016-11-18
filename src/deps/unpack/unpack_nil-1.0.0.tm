@@ -1,7 +1,12 @@
-proc ::MessagePack::unpack::nil {char binary_string final_result} {
+proc ::MessagePack::unpack::nil {char binary_string params previous_result} {
     if {$char == 0xC0} {
-        return "nil"
+        if {[dict get $params showDataType]} {
+            set result [list "nil" "nil"]
+        } else {
+            set result "nil"
+        }
     } else {
-        return [list $char $binary_string $final_result]
+        set result $previous_result
     }
+    return [list $char $binary_string $result]
 }

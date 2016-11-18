@@ -1,7 +1,12 @@
-proc ::MessagePack::unpack::false {char binary_string final_result} {
+proc ::MessagePack::unpack::false {char binary_string params previous_result} {
     if {$char == 0xC2} {
-        return 0
+        if {[dict get $params showDataType]} {
+            set result {"bool" 0}
+        } else {
+            set result 0
+        }
     } else {
-        return [list $char $binary_string $final_result]
+        set result $previous_result
     }
+    return [list $char $binary_string $params $result]
 }
