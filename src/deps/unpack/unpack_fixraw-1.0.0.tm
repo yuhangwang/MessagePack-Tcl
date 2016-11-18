@@ -4,13 +4,7 @@ proc ::MessagePack::unpacking::fixraw {char binary_string params previous_result
         if {[::MessagePack::isStringLongEnough $binary_string $n]} {
             binary scan $binary_string "a$n" tmp_result
             set binary_string [string range $binary_string $n end]
-
-            if {[dict get $params showDataType]} {
-                set result [list "fixraw" $tmp_result]
-            } else {
-                set result $tmp_result
-            }
-            
+            set result [::MessagePack::unpacking::wrapResult $tmp_result "fixraw" $params]
         } else {
             set result $previous_result
         }

@@ -8,11 +8,7 @@ proc ::MessagePack::unpacking::fixmap {char binary_string params previous_result
                 lappend accum $tmp_result
             }
         }
-        if {[dict get $params showDataType]} {
-            set result [list "fixmap" $accum]
-        } else {
-            set result $accum
-        }
+        set result [::MessagePack::unpacking::wrapResult $tmp_result "fixmap" $params]
     } else {
         set result $previous_result
     }

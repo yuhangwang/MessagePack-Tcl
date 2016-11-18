@@ -6,12 +6,7 @@ proc ::MessagePack::unpacking::fixarray {char binary_string params previous_resu
             lassign [::MessagePack::unpack_aux $binary_string] tmp_result binary_string
             lappend accum $tmp_result
         }
-        
-        if {[dict get $params showDataType]} {
-            set result [list "fixarray" $accum]
-        } else {
-            set result $accum
-        }
+        set result [::MessagePack::unpacking::wrapResult $tmp_result "fixarray" $params]
     } else {
         set result $previous_result
     }
