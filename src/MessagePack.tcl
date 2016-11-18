@@ -8,7 +8,6 @@
 namespace eval ::MessagePack {
     namespace eval pack {
         namespace export *
-        namespace ensemble create
     }
     namespace eval unpacking {
         namespace ensemble create

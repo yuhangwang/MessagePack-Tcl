@@ -4,12 +4,12 @@ proc ::MessagePack::unpacking::fixraw {char binary_string params previous_result
         if {[::MessagePack::isStringLongEnough $binary_string $n]} {
             binary scan $binary_string "a$n" tmp_result
             set binary_string [string range $binary_string $n end]
-            set result [::MessagePack::unpacking::wrapResult $tmp_result "fixraw" $params]
+            set result [::MessagePack::unpacking::wrapResult $tmp_result "string" $params]
         } else {
             set result $previous_result
         }
     } else {
         set result $previous_result
     }
-    return [list $char $binary_string $result]
+    return [list $char $binary_string $params $result]
 }

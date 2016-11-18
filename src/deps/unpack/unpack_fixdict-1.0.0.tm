@@ -1,4 +1,4 @@
-proc ::MessagePack::unpacking::fixmap {char binary_string params previous_result} {
+proc ::MessagePack::unpacking::fixdict {char binary_string params previous_result} {
     if {$char >= 0x80 && $char <= 0x8F} {
         set n [expr {$char & 0xF}]
         set tmp_result {}
@@ -8,9 +8,9 @@ proc ::MessagePack::unpacking::fixmap {char binary_string params previous_result
                 lappend tmp_result $tmp_value
             }
         }
-        set result [::MessagePack::unpacking::wrapResult $tmp_result "fixmap" $params]
+        set result $tmp_result
     } else {
         set result $previous_result
     }
-    return [list $char $binary_string $result]
+    return [list $char $binary_string $params $result]
 }

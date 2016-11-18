@@ -5,5 +5,5 @@ proc ::MessagePack::unpacking::negative_fixnum {char binary_string params previo
     } else {
         set result $previous_result
     }
-    return [list $char $binary_string $result]
+    return [list $char $binary_string $params $result]
 }

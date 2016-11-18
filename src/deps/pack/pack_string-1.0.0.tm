@@ -1,5 +1,5 @@
 proc ::MessagePack::pack::string {value} {
-    set n [string length $value]
+    set n [::string length $value]
     if {$n < 32} {
         return [binary format "ca*" [expr {0xA0 | $n}] $value]
     } elseif {$n < 65536} {
