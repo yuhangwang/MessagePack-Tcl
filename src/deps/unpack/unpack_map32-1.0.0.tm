@@ -1,10 +1,10 @@
-proc ::MessagePack::unpacking::dict16 {char binary_string params previous_result} {
-    if {$char == 0xDE} {
-        if {[::MessagePack::isStringLongEnough $binary_string 2]} {
-            # find out length of the dict (16-bit or 2 bytes int)
+proc ::MessagePack::unpacking::map32 {char binary_string params previous_result} {
+    if {$char == 0xDF} {
+        if {[::MessagePack::isStringLongEnough $binary_string 4]} {
+            # find out length of the dict (32-bit or 4 bytes int)
             binary scan $binary_string "I" tmp_n
-            set n [expr {$tmp_n & 0xFFFF}]
-            set binary_string [string range $binary_string 2 end]
+            set n [expr {$tmp_n & 0xFFFFFFFF}]
+            set binary_string [string range $binary_string 4 end]
             set tmp_result {}
             for {set i 0} {$i < $n} {incr i} {
                 # loop through each key-value pair

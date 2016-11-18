@@ -43,16 +43,16 @@ package require unpack_operations
 package require unpack_aux
 package require unpack_positive_fixnum
 package require unpack_negative_fixnum
-package require unpack_fixdict
+package require unpack_fixmap ;# dict
+package require unpack_map16  ;# dict
+package require unpack_map32  ;# dict
 package require unpack_fixarray
-package require unpack_fixraw
+package require unpack_fixraw ;# string
 package require unpack_nil
 package require unpack_false
 package require unpack_true
 package require unpack_float
 package require unpack_double
-package require unpack_dict16
-package require unpack_dict32
 package require unpack_wrapResult
 package require unpack
 
