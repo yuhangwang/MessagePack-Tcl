@@ -11,9 +11,10 @@ namespace eval ::MessagePack {
         namespace ensemble create
     }
     namespace eval unpack {
-        namespace export unpack
+        namespace export all
         namespace ensemble create
     }
+
     namespace export pack unpack
 }
 source deps/all.tcl 

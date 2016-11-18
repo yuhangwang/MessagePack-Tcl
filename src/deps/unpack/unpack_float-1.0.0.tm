@@ -16,5 +16,5 @@ proc ::MessagePack::unpack::float {char binary_string params previous_result} {
     } else {
         set result $previous_result
     }
-    return [list $char $binary_string $result]
+    return [list $char $binary_string $params $result]
 }
