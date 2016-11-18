@@ -7,9 +7,12 @@ package require pack_int16
 package require pack_int32
 package require pack_float
 package require pack_double
+package require pack_string
+package require pack_map
+package require pack_dict
 
 package require isStringLongEnough
-package require getChar
+package require getByte
 package require assertApproxEq
 
 package require unpack_operations

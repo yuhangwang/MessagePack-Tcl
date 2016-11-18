@@ -1,11 +1,11 @@
 proc ::MessagePack::unpacking::fixmap {char binary_string params previous_result} {
     if {$char >= 0x80 && $char <= 0x8F} {
         set n [expr {$char & 0xF}]
-        set accum {}
+        set tmp_result {}
         for {set i 0} {$i < $n} {incr i} {
-            foreach i {1 2} {
-                lassign [::MessagePack::unpack_aux $binary_string] tmp_result binary_string
-                lappend accum $tmp_result
+            foreach _ {1 2} {
+                lassign [::MessagePack::unpack_aux $binary_string $params] tmp_value binary_string
+                lappend tmp_result $tmp_value
             }
         }
         set result [::MessagePack::unpacking::wrapResult $tmp_result "fixmap" $params]

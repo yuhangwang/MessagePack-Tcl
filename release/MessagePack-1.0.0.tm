@@ -18,7 +18,6 @@ namespace eval ::MessagePack {
     namespace export assertApproxEq
 }
  
-
 proc ::MessagePack::unpacking::fixarray {char binary_string params previous_result} {
     if {$char >= 0x90 && $char <= 0x9F} {
         set n [expr {$char & 0xF}]
@@ -27,30 +26,23 @@ proc ::MessagePack::unpacking::fixarray {char binary_string params previous_resu
             lassign [::MessagePack::unpack_aux $binary_string] tmp_result binary_string
             lappend accum $tmp_result
         }
-        
-        if {[dict get $params showDataType]} {
-            set result [list "fixarray" $accum]
-        } else {
-            set result $accum
-        }
+        set result [::MessagePack::unpacking::wrapResult $tmp_result "fixarray" $params]
     } else {
         set result $previous_result
     }
     return [list $char $binary_string $params $result]
 }
+
 proc ::MessagePack::unpacking::positive_fixnum {char binary_string params previous_result} {
     if {$char < 0x80} {
         set tmp_result [expr {$char & 0x7F}]
-        if {[dict get $params showDataType]} {
-            set result [list "positive_fixnum" $tmp_result]
-        } else {
-            set result $tmp_result
-        }
+        set result [::MessagePack::unpacking::wrapResult $tmp_result "positive_fixnum" $params]
     } else {
         set result $previous_result
     }
     return [list $char $binary_string $result]
 }
+
 ## Return a list functions (operations) required for unpacking
 proc ::MessagePack::unpacking::operations {} {
     return [list \
@@ -59,6 +51,7 @@ proc ::MessagePack::unpacking::operations {} {
         ::MessagePack::unpacking::double \
     ]
 }
+
 ## Axillary function for unpacking a MessagePack binary string
 proc ::MessagePack::unpack_aux {binary_string params} {
     lassign [::MessagePack::getChar $binary_string] char binary_string
@@ -72,30 +65,20 @@ proc ::MessagePack::unpack_aux {binary_string params} {
 proc ::MessagePack::unpacking::negative_fixnum {char binary_string params previous_result} {
     if {($char & 0xE0) >= 0xE0} {
         binary scan [binary format "c" [expr {($char & 0x1F) | 0xE0}]] "c" tmp_result
-
-        if {[dict get $params showDataType]} {
-            set result [list "negative_fixnum" $tmp_result]
-        } else {
-            set result $tmp_result
-        }
+        set result [::MessagePack::unpacking::wrapResult $tmp_result "negative_fixnum" $params]
     } else {
         set result $previous_result
     }
     return [list $char $binary_string $result]
 }
+
 proc ::MessagePack::unpacking::fixraw {char binary_string params previous_result} {
     if {$char >= 0xA0 && $char <= 0xBF} {
         set n [expr {$char & 0x1F}]
         if {[::MessagePack::isStringLongEnough $binary_string $n]} {
             binary scan $binary_string "a$n" tmp_result
             set binary_string [string range $binary_string $n end]
-
-            if {[dict get $params showDataType]} {
-                set result [list "fixraw" $tmp_result]
-            } else {
-                set result $tmp_result
-            }
-            
+            set result [::MessagePack::unpacking::wrapResult $tmp_result "fixraw" $params]
         } else {
             set result $previous_result
         }
@@ -115,31 +98,27 @@ proc ::MessagePack::unpacking::fixmap {char binary_string params previous_result
                 lappend accum $tmp_result
             }
         }
-        if {[dict get $params showDataType]} {
-            set result [list "fixmap" $accum]
-        } else {
-            set result $accum
-        }
+        set result [::MessagePack::unpacking::wrapResult $tmp_result "fixmap" $params]
     } else {
         set result $previous_result
     }
     return [list $char $binary_string $result]
 }
-proc ::MessagePack::unpacking::true {char binary_string final_result} {
+
+proc ::MessagePack::unpacking::true {char binary_string previous_result} {
     if {$char == 0xC3} {
-        return 1
+        set tmp_result 1
+        set result [::MessagePack::unpacking::wrapResult $tmp_result "bool" $params]
     } else {
-        return [list $char $binary_string $final_result]
+        set result $previous_result
     }
+    return [list $char $binary_string $result]
 }
 
 proc ::MessagePack::unpacking::nil {char binary_string params previous_result} {
     if {$char == 0xC0} {
-        if {[dict get $params showDataType]} {
-            set result [list "nil" "nil"]
-        } else {
-            set result "nil"
-        }
+        set tmp_result "nil"
+        set result [::MessagePack::unpacking::wrapResult $tmp_result "double" $params]
     } else {
         set result $previous_result
     }
@@ -163,11 +142,8 @@ proc ::MessagePack::unpacking::float {char binary_string params previous_result}
 
 proc ::MessagePack::unpacking::false {char binary_string params previous_result} {
     if {$char == 0xC2} {
-        if {[dict get $params showDataType]} {
-            set result {"bool" 0}
-        } else {
-            set result 0
-        }
+        set tmp_result 0
+        set result [::MessagePack::unpacking::wrapResult $tmp_result "bool" $params]
     } else {
         set result $previous_result
     }
@@ -216,12 +192,15 @@ proc ::MessagePack::pack::int32 {value} {
         return [::MessagePack::pack fix_uint32 $value]
     }
 }
+
 proc ::MessagePack::pack::float {value} {
     return [binary format "cR" 0xCA $value]
 }
+
 proc ::MessagePack::pack::int {value} { 
     return [::MessagePack::pack int32 $value] 
 }
+
 proc ::MessagePack::pack::int64 {value} {
     if {$value < -2147483648} {
         return [::MessagePack::pack fix_int64 $value]
@@ -231,6 +210,7 @@ proc ::MessagePack::pack::int64 {value} {
         return [::MessagePack::pack fix_uint64 $value]
     }
 }
+
 proc ::MessagePack::pack::int {value} { 
     if {$value < -32} {
         return [::MessagePack::pack fix_int8 $value]
@@ -246,6 +226,7 @@ proc ::MessagePack::pack::int {value} {
         }
     }
 }
+
 proc ::MessagePack::pack::int16 {value} {
     if {$value < -128} {
         return [::MessagePack::pack fix_int16 $value]
@@ -257,12 +238,15 @@ proc ::MessagePack::pack::int16 {value} {
         return [::MessagePack::pack fix_uint16 $value]
     }
 }
+
 proc ::MessagePack::pack::short {value} { 
    return [::MessagePack::pack int16 $value]
 }
+
 proc ::MessagePack::pack::double {value} {
     return [binary format "cQ" 0xCB $value]
 }
+
 ## consume a char (8-bit integer) and return {data result}
 # where the $data is the truncated input binary string by one char
 # and $result is the result of [expr {$char & 0xFF}]

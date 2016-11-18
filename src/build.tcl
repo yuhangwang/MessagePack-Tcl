@@ -37,7 +37,7 @@ proc main {output_file} {
     set main_script "MessagePack.tcl"
     set main_str [string map {"source deps/all.tcl" ""} [read_all $main_script]]
     set deps_str [read_files [list_dependencies "deps"] {}]
-    write_file $output_file [join [list $main_str $deps_str] "\n"]
+    write_file $output_file [join [list $main_str $deps_str] ""]
 }
 
 set version "1.0.0"
