@@ -1,5 +1,15 @@
 proc list_dependencies {deps_dir} {
-    return [glob -directory $deps_dir "*.tm"]
+    set result {}
+    foreach path [glob -nocomplain -dir $deps_dir *] {
+        if {[file type $path] eq {directory}} {
+            lappend result {*}[list_dependencies $path]
+        } elseif {[string match "*.tm" $path]} {
+            lappend result $path
+        } else {
+            continue
+        }
+    }
+    return $result
 }
 
 proc read_all {file_name} {
@@ -30,6 +40,6 @@ proc main {output_file} {
     write_file $output_file [join [list $main_str $deps_str] "\n"]
 }
 
-set version "0.1.0"
+set version "1.0.0"
 main [format "../release/MessagePack-%s.tm" $version]
 exit
