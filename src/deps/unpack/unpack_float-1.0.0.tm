@@ -1,4 +1,4 @@
-proc ::MessagePack::unpack::float {char binary_string params previous_result} {
+proc ::MessagePack::unpacking::float {char binary_string params previous_result} {
     if {$char == 0xCA} {
         if {[::MessagePack::isStringLongEnough $binary_string 4]} {
             binary scan $binary_string "R" tmp_result

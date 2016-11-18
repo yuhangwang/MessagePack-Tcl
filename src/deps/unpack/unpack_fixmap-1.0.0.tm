@@ -1,4 +1,4 @@
-proc ::MessagePack::unpack::fixmap {char binary_string params previous_result} {
+proc ::MessagePack::unpacking::fixmap {char binary_string params previous_result} {
     if {$char >= 0x80 && $char <= 0x8F} {
         set n [expr {$char & 0xF}]
         set accum {}

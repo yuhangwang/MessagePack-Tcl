@@ -1,4 +1,4 @@
-proc ::MessagePack::unpack::fixarray {char binary_string params previous_result} {
+proc ::MessagePack::unpacking::fixarray {char binary_string params previous_result} {
     if {$char >= 0x90 && $char <= 0x9F} {
         set n [expr {$char & 0xF}]
         set accum {}

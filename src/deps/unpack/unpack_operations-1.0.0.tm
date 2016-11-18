@@ -1,6 +1,6 @@
 ## Return a list functions (operations) required for unpacking
-proc ::MessagePack::unpack::operations {} {
+proc ::MessagePack::unpacking::operations {} {
     return [list \
-        ::MessagePack::unpack::float
+        ::MessagePack::unpacking::float
     ]
 }

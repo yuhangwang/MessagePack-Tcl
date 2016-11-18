@@ -1,4 +1,4 @@
-proc ::MessagePack::unpack::positive_fixnum {char binary_string params previous_result} {
+proc ::MessagePack::unpacking::positive_fixnum {char binary_string params previous_result} {
     if {$char < 0x80} {
         set tmp_result [expr {$char & 0x7F}]
         if {[dict get $params showDataType]} {

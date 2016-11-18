@@ -1,4 +1,4 @@
-proc ::MessagePack::unpack::nil {char binary_string params previous_result} {
+proc ::MessagePack::unpacking::nil {char binary_string params previous_result} {
     if {$char == 0xC0} {
         if {[dict get $params showDataType]} {
             set result [list "nil" "nil"]

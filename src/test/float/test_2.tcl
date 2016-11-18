@@ -5,7 +5,7 @@ proc test {} {
     set solution 1.123
     set str [pack float $solution]
     set showDataType 1
-    set result [lindex [unpack all $str $showDataType] 0]
+    set result [lindex [unpack $str $showDataType] 0]
     puts "result = {$result}"
     puts "solution = $solution"
     set num [lindex $result 1]
