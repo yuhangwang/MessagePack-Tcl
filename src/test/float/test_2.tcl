@@ -8,7 +8,7 @@ proc test {} {
     set result [lindex [unpack $binary_string $showDataType] 0]
     puts "result = {$result}"
     puts "solution = $solution"
-    set num [lindex $result 1]
+    set num [lindex $result 0]
     assertApproxEq $num $solution 1.0e-4
     
     set here [file dirname [file normalize [info script]]]

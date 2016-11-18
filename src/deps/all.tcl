@@ -8,7 +8,7 @@ package require pack_int32
 package require pack_float
 package require pack_double
 package require pack_string
-package require pack_map
+package require pack_markDictSize
 package require pack_dict
 
 package require isStringLongEnough
