@@ -10,6 +10,7 @@ package require pack_double
 
 package require isStringLongEnough
 package require getChar
+package require assertApproxEq
 
 package require unpack_operations
 package require unpack_aux
@@ -22,6 +23,8 @@ package require unpack_nil
 package require unpack_false
 package require unpack_true
 package require unpack_float
+package require unpack_double
+package require unpack_wrapResult
 package require unpack
 
 package require mpread

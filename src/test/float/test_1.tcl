@@ -7,11 +7,7 @@ proc test {} {
     set result [lindex [unpack $binary_string] 0]
     puts "result = $result"
     puts "solution = $solution"
-    if {[expr abs($result - $solution) < 1.0e-4]} {
-        puts "SUCCESS!"
-    } else {
-        error "$result != $solution"
-    }
+    assertApproxEq $result $solution 1.0e-4
 
     set here [file dirname [file normalize [info script]]]
     set output [file join $here "output" "out1.mp"]
