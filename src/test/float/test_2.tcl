@@ -3,7 +3,7 @@ namespace import MessagePack::*
 
 proc test {} {
     set solution 1.123
-    set str [pack float $solution]
+    set str [pack double $solution]
     set showDataType 1
     set result [lindex [unpack $str $showDataType] 0]
     puts "result = {$result}"
@@ -14,6 +14,10 @@ proc test {} {
     } else {
         error "$result != $solution"
     }
+
+    set here [file dirname [file normalize [info script]]]
+    set output [file join $here "output" "out2.mp"]
+    mpsave $output $binary_string
 }
 
 test

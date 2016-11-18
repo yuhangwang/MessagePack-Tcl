@@ -7,12 +7,13 @@
 # -----------------------------------------------
 namespace eval ::MessagePack {
     namespace eval pack {
-        namespace export int float
+        namespace export *
         namespace ensemble create
     }
     namespace eval unpacking {
         namespace ensemble create
     }
     namespace export pack unpack
+    namespace export mpread mpsave
 }
 source deps/all.tcl 

@@ -2,5 +2,6 @@
 proc ::MessagePack::unpacking::operations {} {
     return [list \
         ::MessagePack::unpacking::float
+        ::MessagePack::unpacking::nil
     ]
 }
