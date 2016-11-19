@@ -1,7 +1,7 @@
 # MessagePack-Tcl
-A pure Tcl implementation of the [MessagePack](http://msgpack.org/index.html).  
-It is designed in functional reactive programming style  
-and is compatible with **Tcl 8.5**.
+* A pure Tcl implementation of the [MessagePack](http://msgpack.org/index.html).  
+* Designed in functional reactive programming style  
+* Compatible with **Tcl 8.5**.
 
 ## Installation
 This package is implemented as a [Tcl module](https://www.tcl.tk/man/tcl/TclCmd/tm.htm).  
