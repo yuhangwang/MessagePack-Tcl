@@ -37,7 +37,10 @@ package require pack_markDictSize
 package require pack_markArraySize
 package require pack_dict
 package require pack_list
-package require pack_array
+package require pack_c_array
+package require pack_tcl_array
+package require pack_raw
+package require pack_rawbytes
 
 package require isStringLongEnough
 package require getByte
