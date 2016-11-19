@@ -16,8 +16,9 @@ add that location to your Tcl module search path:
 ```{bash}
 cp MessagePack-1.0.0.tm /home/steven/TclModules
 ```
-
+Add this line at the top of your tcl script:
 ```{tcl}
+# my.tcl
 ::tcl::tm::path add "/home/steven/TclModules"
 ```
 
