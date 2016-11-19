@@ -2,6 +2,7 @@
 ::tcl::tm::path add [file join [file dirname [file normalize [info script]]] "pack"]
 ::tcl::tm::path add [file join [file dirname [file normalize [info script]]] "unpack"]
 ::tcl::tm::path add [file join [file dirname [file normalize [info script]]] "io"]
+package require pack_aux
 package require pack_positive_fixnum
 package require pack_negative_fixnum
 package require pack_int
