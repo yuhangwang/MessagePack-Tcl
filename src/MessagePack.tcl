@@ -6,13 +6,12 @@
 # License: MIT/X11
 # -----------------------------------------------
 namespace eval ::MessagePack {
-    namespace eval pack {
-        namespace export *
-    }
+    namespace eval packing {}
     namespace eval unpacking {
         namespace ensemble create
     }
-    namespace export pack unpack
+    namespace export pack
+    namespace export unpack
     namespace export mpread mpsave
     namespace export assertApproxEq
 }
