@@ -3,6 +3,12 @@
 * Designed in functional reactive programming style  
 * Compatible with **Tcl 8.5**.
 
+
+## Download
+The latest version can be downloaded from [here](https://github.com/yuhangwang/MessagePack-Tcl/releases/download/1.0.0/MessagePack-1.0.0.tm).
+For all versions, please go to the [release](https://github.com/yuhangwang/MessagePack-Tcl/releases) page.  
+A normal user just need the `.tm` file. Please ignore the `zip`/`tar.gz` source code release files.  
+
 ## Installation
 This package is implemented as a [Tcl module](https://www.tcl.tk/man/tcl/TclCmd/tm.htm).  
 To use it, just copy the `MessagePack-1.0.0.tm` file to somewhere on your file system and  
