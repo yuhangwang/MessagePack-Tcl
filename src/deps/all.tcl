@@ -33,7 +33,10 @@ package require pack_nil
 package require pack_false
 package require pack_true
 package require pack_markDictSize
+package require pack_markArraySize
 package require pack_dict
+package require pack_list
+package require pack_array
 
 package require isStringLongEnough
 package require getByte

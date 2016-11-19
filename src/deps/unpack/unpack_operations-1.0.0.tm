@@ -7,6 +7,8 @@ proc ::MessagePack::unpacking::operations {} {
         ::MessagePack::unpacking::fixraw \
         ::MessagePack::unpacking::fixarray \
         ::MessagePack::unpacking::fixmap\
+        ::MessagePack::unpacking::map16 \
+        ::MessagePack::unpacking::map32 \
         ::MessagePack::unpacking::positive_fixnum\
         ::MessagePack::unpacking::true \
         ::MessagePack::unpacking::false \
