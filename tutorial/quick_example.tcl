@@ -1,8 +1,5 @@
-# MessagePack-Tcl
-A pure Tcl MessagePack module (compatible with Tcl 8.5)
-
-## Example:
-```{tcl}
+# add the release directory to Tcl module searching path
+::tcl::tm::path add [file join [pwd] ".." "release"]
 package require MessagePack
 namespace import ::MessagePack::*
 
@@ -53,7 +50,3 @@ proc main {} {
 }
 
 main
-```
-
-## License
-MIT/X11
