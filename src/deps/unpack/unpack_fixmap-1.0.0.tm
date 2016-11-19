@@ -4,8 +4,8 @@ proc ::MessagePack::unpacking::fixmap {char binary_string params previous_result
         set tmp_result {}
         for {set i 0} {$i < $n} {incr i} {
             foreach _ {1 2} {
-                lassign [::MessagePack::unpack_aux $binary_string $params] tmp_value binary_string
-                lappend tmp_result $tmp_value
+                lassign [::MessagePack::unpack_aux $binary_string $params] value binary_string
+                lappend tmp_result $value
             }
         }
         set result $tmp_result
