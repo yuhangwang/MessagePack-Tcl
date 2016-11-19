@@ -1,6 +1,6 @@
 # MessagePack-Tcl
-* A pure Tcl implementation of the [MessagePack](http://msgpack.org/index.html).  
-* Designed in functional reactive programming style  
+* A pure Tcl implementation of the [MessagePack](http://msgpack.org/index.html) according to these [specifications](https://github.com/msgpack/msgpack/blob/master/spec.md)
+* Designed in Functional Reactive Programming (FRP) style  
 * Compatible with **Tcl 8.5**.
 
 
