@@ -80,6 +80,6 @@ main
 
 ## License
 MIT/X11  
-Author: Yuhang(Steven) Wang
+Author: Yuhang(Steven) Wang  
 Date: 11/19/2016
 
