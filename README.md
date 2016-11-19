@@ -1,8 +1,22 @@
 # MessagePack-Tcl
 A pure Tcl MessagePack module (compatible with Tcl 8.5)
 
+## Installation
+This package is implemented as a [Tcl module](https://www.tcl.tk/man/tcl/TclCmd/tm.htm).  
+To use it, just copy the `MessagePack-1.0.0.tm` file to somewhere on your file system and  
+add that location to your Tcl module search path:
+```{bash}
+cp MessagePack-1.0.0.tm /home/steven/TclModules
+```
+
+```{tcl}
+::tcl::tm::path add "/home/steven/TclModules"
+```
+
+
 ## Example:
 ```{tcl}
+::tcl::tm::path add "/home/steven/TclModules"
 package require MessagePack
 namespace import ::MessagePack::*
 
@@ -47,7 +61,7 @@ proc main {} {
     }
 
     # an example of writing/reading MessagePack data
-    mpsave "out.msgpack" [pack {c_array float} {1 2 3 4 5}]    ;# save
+    mpsave "out.msgpack" [pack {c_array float} {1 2 3 4 5}] ;# save
     set content [mpread "out.msgpack"] ;# read
     puts $content
 }
@@ -56,4 +70,7 @@ main
 ```
 
 ## License
-MIT/X11
+MIT/X11  
+Author: Yuhang(Steven) Wang
+Date: 11/19/2016
+
