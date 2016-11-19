@@ -1,5 +1,9 @@
 proc ::MessagePack::pack {args} {
-    set types [lrange $args 0 [expr [llength $args] - 2]]
-    set obj   [lindex $args end]
-    return [::MessagePack::packing::aux $types $obj]
+    if {[llength $args] == 2} {
+        lassign $args types obj
+        return [::MessagePack::packing::aux $types $obj]
+    } else {
+        puts stderr "ERROR HINT: MessagePack::pack takes exactly 2 arguments; [llength $args] were given"
+        return ""
+    }
 }

@@ -3,7 +3,7 @@ namespace import MessagePack::*
 
 proc test {} {
     set solution {1 2 3}
-    set binary_string [pack c_array float $solution]
+    set binary_string [pack {c_array float} $solution]
     set answer [unpack $binary_string]
     puts $answer
 

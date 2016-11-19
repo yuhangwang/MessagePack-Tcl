@@ -1,8 +1,8 @@
 ## Auxiliary function for packing object
 proc ::MessagePack::packing::aux {types obj} {
     if {[llength $types] == 0} {
-        set fn "string" ;# default object type is "string"
-        return [::MessagePack::packing::$fn $obj]
+        # default data type is "string"
+        return [::MessagePack::packing::string $obj]
     } elseif {[llength $types] == 1} {
         set fn $types
         return [::MessagePack::packing::$fn $obj]

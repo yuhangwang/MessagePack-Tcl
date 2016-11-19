@@ -46,7 +46,7 @@ proc ::MessagePack::assertApproxEq {n1 n2 threshold} {
 proc ::MessagePack::mpread {file_name} {
     set IN [open $file_name r]
     fconfigure $IN -translation binary
-    set ooo [read $IN]
+    set ooo [::MessagePack::unpack [read $IN]]
     close $IN
     return $ooo
 }
@@ -353,8 +353,8 @@ proc ::MessagePack::packing::raw {value} {
 ## Auxiliary function for packing object
 proc ::MessagePack::packing::aux {types obj} {
     if {[llength $types] == 0} {
-        set fn "string" ;# default object type is "string"
-        return [::MessagePack::packing::$fn $obj]
+        # default data type is "string"
+        return [::MessagePack::packing::string $obj]
     } elseif {[llength $types] == 1} {
         set fn $types
         return [::MessagePack::packing::$fn $obj]
@@ -384,9 +384,13 @@ proc ::MessagePack::packing::tcl_array {key_type value_type value} {
 
 
 proc ::MessagePack::pack {args} {
-    set types [lrange $args 0 [expr [llength $args] - 2]]
-    set obj   [lindex $args end]
-    return [::MessagePack::packing::aux $types $obj]
+    if {[llength $args] == 2} {
+        lassign $args types obj
+        return [::MessagePack::packing::aux $types $obj]
+    } else {
+        puts stderr "ERROR HINT: MessagePack::pack takes exactly 2 arguments; [llength $args] were given"
+        return ""
+    }
 }
 proc ::MessagePack::unpacking::fixarray {char binary_string params previous_result} {
     if {$char >= 0x90 && $char <= 0x9F} {
@@ -547,7 +551,7 @@ proc ::MessagePack::unpacking::false {char binary_string params previous_result}
 proc ::MessagePack::unpack {binary_string {showDataType 0}} {
     set params [list showDataType $showDataType]
     lassign [::MessagePack::unpacking::aux $binary_string $params] result _
-    return [list $result]
+    return $result
 }
 
 proc ::MessagePack::unpacking::double {char binary_string params previous_result} {

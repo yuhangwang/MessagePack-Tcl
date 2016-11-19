@@ -4,5 +4,5 @@
 proc ::MessagePack::unpack {binary_string {showDataType 0}} {
     set params [list showDataType $showDataType]
     lassign [::MessagePack::unpacking::aux $binary_string $params] result _
-    return [list $result]
+    return $result
 }
