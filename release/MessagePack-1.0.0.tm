@@ -307,8 +307,11 @@ proc ::MessagePack::packing::markArraySize {value} {
         return [binary format c [expr {0x90 | $value}]]
     } elseif {$value < 65536} {
         return [binary format cS 0xDC $value]
-    } else {
+    } elseif {$value < 4294967296} {
         return [binary format cI 0xDD $value]
+    } else {
+        puts stderr "ERROR HINT: array size is bigger than what a 32-bit uint can store"
+        return [::MessagePack::packing::markArraySize 0]
     }
 }
 
@@ -411,6 +414,16 @@ proc ::MessagePack::unpacking::positive_fixnum {char binary_string params previo
 proc ::MessagePack::unpacking::operations {} {
     return [list \
         ::MessagePack::unpacking::nil \
+        ::MessagePack::unpacking::uint8 \
+        ::MessagePack::unpacking::uint16 \
+        ::MessagePack::unpacking::uint32 \
+        ::MessagePack::unpacking::uint64 \
+        ::MessagePack::unpacking::int8 \
+        ::MessagePack::unpacking::int16 \
+        ::MessagePack::unpacking::int32 \
+        ::MessagePack::unpacking::int64 \
+        ::MessagePack::unpacking::array16 \
+        ::MessagePack::unpacking::array32 \
         ::MessagePack::unpacking::float \
         ::MessagePack::unpacking::double \
         ::MessagePack::unpacking::fixraw \
@@ -419,8 +432,11 @@ proc ::MessagePack::unpacking::operations {} {
         ::MessagePack::unpacking::map16 \
         ::MessagePack::unpacking::map32 \
         ::MessagePack::unpacking::positive_fixnum\
+        ::MessagePack::unpacking::negative_fixnum\
         ::MessagePack::unpacking::true \
         ::MessagePack::unpacking::false \
+        ::MessagePack::unpacking::raw16 \
+        ::MessagePack::unpacking::raw32 \
     ]
 }
 
@@ -594,6 +610,224 @@ proc ::MessagePack::unpacking::map16 {char binary_string params previous_result}
                     lassign [::MessagePack::unpacking::aux $binary_string $params] tmp_value binary_string
                     lappend tmp_result $tmp_value
                 }
+            }
+            set result $tmp_result
+        } else {
+            set result $previous_result
+        }
+    } else {
+        set result $previous_result
+    }
+    return [list $char $binary_string $params $result]
+}
+
+proc ::MessagePack::unpacking::uint16 {char binary_string params previous_result} {
+    if {$char == 0xCD} {
+        if {[::MessagePack::isStringLongEnough $binary_string 2]} {
+            binary scan $binary_string "S" tmp_value
+            set tmp_result [expr {$tmp_value & 0xFFFF}]
+            set binary_string [string range $binary_string 2 end]
+            set result [::MessagePack::unpacking::wrapResult $tmp_result "uint16" $params]
+        } else {
+            set result $previous_result
+        }
+    } else {
+        set result $previous_result
+    }
+    return [list $char $binary_string $params $result]
+}
+
+proc ::MessagePack::unpacking::uint8 {char binary_string params previous_result} {
+    if {$char == 0xCC} {
+        if {[::MessagePack::isStringLongEnough $binary_string 1]} {
+            binary scan $binary_string "c" tmp_value
+            set tmp_result [expr {$tmp_value & 0xFF}]
+            set binary_string [string range $binary_string 1 end]
+            set result [::MessagePack::unpacking::wrapResult $tmp_result "uint8" $params]
+        } else {
+            set result $previous_result
+        }
+    } else {
+        set result $previous_result
+    }
+    return [list $char $binary_string $params $result]
+}
+
+proc ::MessagePack::unpacking::uint32 {char binary_string params previous_result} {
+    if {$char == 0xCE} {
+        if {[::MessagePack::isStringLongEnough $binary_string 4]} {
+            binary scan $binary_string "I" tmp_value
+            set tmp_result [expr {$tmp_value & 0xFFFFFFFF}]
+            set binary_string [string range $binary_string 4 end]
+            set result [::MessagePack::unpacking::wrapResult $tmp_result "uint32" $params]
+        } else {
+            set result $previous_result
+        }
+    } else {
+        set result $previous_result
+    }
+    return [list $char $binary_string $params $result]
+}
+
+proc ::MessagePack::unpacking::int16 {char binary_string params previous_result} {
+    if {$char == 0xD1} {
+        if {[::MessagePack::isStringLongEnough $binary_string 2]} {
+            binary scan $binary_string "S" tmp_result
+            set binary_string [string range $binary_string 2 end]
+            set result [::MessagePack::unpacking::wrapResult $tmp_result "int16" $params]
+        } else {
+            set result $previous_result
+        }
+    } else {
+        set result $previous_result
+    }
+    return [list $char $binary_string $params $result]
+}
+
+proc ::MessagePack::unpacking::uint64 {char binary_string params previous_result} {
+    if {$char == 0xCF} {
+        if {[::MessagePack::isStringLongEnough $binary_string 8]} {
+            binary scan $binary_string "W" tmp_value
+            set tmp_result [expr {$tmp_value & 0xFFFFFFFFFFFFFFFF}]
+            set binary_string [string range $binary_string 8 end]
+            set result [::MessagePack::unpacking::wrapResult $tmp_result "uint64" $params]
+        } else {
+            set result $previous_result
+        }
+    } else {
+        set result $previous_result
+    }
+    return [list $char $binary_string $params $result]
+}
+
+proc ::MessagePack::unpacking::int32 {char binary_string params previous_result} {
+    if {$char == 0xD2} {
+        if {[::MessagePack::isStringLongEnough $binary_string 4]} {
+            binary scan $binary_string "I" tmp_result
+            set binary_string [string range $binary_string 4 end]
+            set result [::MessagePack::unpacking::wrapResult $tmp_result "int32" $params]
+        } else {
+            set result $previous_result
+        }
+    } else {
+        set result $previous_result
+    }
+    return [list $char $binary_string $params $result]
+}
+
+proc ::MessagePack::unpacking::int8 {char binary_string params previous_result} {
+    if {$char == 0xD0} {
+        if {[::MessagePack::isStringLongEnough $binary_string 1]} {
+            binary scan $binary_string "c" tmp_result
+            set binary_string [string range $binary_string 1 end]
+            set result [::MessagePack::unpacking::wrapResult $tmp_result "int8" $params]
+        } else {
+            set result $previous_result
+        }
+    } else {
+        set result $previous_result
+    }
+    return [list $char $binary_string $params $result]
+}
+
+proc ::MessagePack::unpacking::raw32 {char binary_string params previous_result} {
+    if {$char == 0xDB} {
+        if {[::MessagePack::isStringLongEnough $binary_string 4]} {
+            binary scan $binary_string "I" tmp_n
+            set n [expr {$tmp_n & 0xFFFFFFFF}]
+            set binary_string [string range $binary_string 4 end]
+
+            # scan n bytes
+            if {[::MessagePack:isStringLongEnough $binary_string $n]} {
+                binary scan $binary_string "a$n" tmp_result
+                set binary_string [string range $binary_string $n end]
+            } else {
+                set tmp_result $previous_result
+            }
+
+            set result [::MessagePack::unpacking::wrapResult $tmp_result "string" $params]
+        } else {
+            set result $previous_result
+        }
+    } else {
+        set result $previous_result
+    }
+    return [list $char $binary_string $params $result]
+}
+
+proc ::MessagePack::unpacking::int64 {char binary_string params previous_result} {
+    if {$char == 0xD3} {
+        if {[::MessagePack::isStringLongEnough $binary_string 8]} {
+            binary scan $binary_string "W" tmp_result
+            set binary_string [string range $binary_string 8 end]
+            set result [::MessagePack::unpacking::wrapResult $tmp_result "int64" $params]
+        } else {
+            set result $previous_result
+        }
+    } else {
+        set result $previous_result
+    }
+    return [list $char $binary_string $params $result]
+}
+
+proc ::MessagePack::unpacking::array16 {char binary_string params previous_result} {
+    if {$char == 0xDC} {
+        if {[::MessagePack::isStringLongEnough $binary_string 2]} {
+            binary scan $binary_string "S" tmp_n
+            set n [expr {$tmp_n & 0xFFFF}]
+            set binary_string [string range $binary_string 2 end]
+
+            set tmp_result {}
+            for {set i 0} {$i < $n} {incr i} {
+                lassign [::MessagePack::unpacking::aux $binary_string $params] tmp_value binary_string
+                lappend tmp_result $tmp_value
+            }
+            set result $tmp_result
+        } else {
+            set result $previous_result
+        }
+    } else {
+        set result $previous_result
+    }
+    return [list $char $binary_string $params $result]
+}
+
+proc ::MessagePack::unpacking::raw16 {char binary_string params previous_result} {
+    if {$char == 0xDA} {
+        if {[::MessagePack::isStringLongEnough $binary_string 2]} {
+            binary scan $binary_string "S" tmp_n
+            set n [expr {$tmp_n & 0xFFFF}]
+            set binary_string [string range $binary_string 2 end]
+            
+            # scan n bytes
+            if {[::MessagePack:isStringLongEnough $binary_string $n]} {
+                binary scan $binary_string "a$n" tmp_result
+                set binary_string [string range $binary_string $n end]
+            } else {
+                set tmp_result $previous_result
+            }
+
+            set result [::MessagePack::unpacking::wrapResult $tmp_result "string" $params]
+        } else {
+            set result $previous_result
+        }
+    } else {
+        set result $previous_result
+    }
+    return [list $char $binary_string $params $result]
+}
+
+proc ::MessagePack::unpacking::array32 {char binary_string params previous_result} {
+    if {$char == 0xDD} {
+        if {[::MessagePack::isStringLongEnough $binary_string 4]} {
+            binary scan $binary_string "I" tmp_n
+            set n [expr {$tmp_n & 0xFFFFFFFF}]
+            set binary_string [string range $binary_string 4 end]
+
+            set tmp_result {}
+            for {set i 0} {$i < $n} {incr i} {
+                lassign [::MessagePack::unpacking::aux $binary_string $params] tmp_value binary_string
+                lappend tmp_result $tmp_value
             }
             set result $tmp_result
         } else {
