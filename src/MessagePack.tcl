@@ -7,9 +7,7 @@
 # -----------------------------------------------
 namespace eval ::MessagePack {
     namespace eval packing {}
-    namespace eval unpacking {
-        namespace ensemble create
-    }
+    namespace eval unpacking {}
     namespace export pack
     namespace export unpack
     namespace export mpread mpsave
