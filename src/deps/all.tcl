@@ -56,10 +56,22 @@ package require unpacking_map32  ;# dict
 package require unpacking_fixarray
 package require unpacking_fixraw ;# string
 package require unpacking_nil
-package require unpacking_false
 package require unpacking_true
+package require unpacking_false
 package require unpacking_float
 package require unpacking_double
+package require unpacking_uint8
+package require unpacking_uint16
+package require unpacking_uint32
+package require unpacking_uint64
+package require unpacking_int8
+package require unpacking_int16
+package require unpacking_int32
+package require unpacking_int64
+package require unpacking_array16
+package require unpacking_array32
+package require unpacking_raw16
+package require unpacking_raw32
 package require unpacking_wrapResult
 package require unpacking_aux
 package require unpack
