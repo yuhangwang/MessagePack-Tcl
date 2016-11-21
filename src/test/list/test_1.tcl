@@ -1,13 +1,14 @@
 source [file join [pwd] "MessagePack.tcl"]
-namespace import MessagePack::*
+namespace import ::MessagePack::*
 
 proc test {} {
-    set solution 1.123
-    set binary_string [pack float $solution]
-    set result [lindex [unpack $binary_string] 0]
+    set input {{2 int} {{1 2 3} {c_array int}}}
+    set solution {2 {1 2 3}}
+    set binary_string [pack list $input]
+    set result [unpack $binary_string]
     puts "result = $result"
     puts "solution = $solution"
-    ::MessagePack::assertApproxEq $result $solution 1.0e-4
+    ::MessagePack::assertListEq $result $solution
 
     set here [file dirname [file normalize [info script]]]
     set output [file join $here "output" "out1.mp"]

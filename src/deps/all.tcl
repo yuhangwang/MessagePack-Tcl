@@ -46,6 +46,7 @@ package require pack
 package require isStringLongEnough
 package require getByte
 package require assertApproxEq
+package require assertListEq
 
 package require unpacking_operations
 package require unpacking_positive_fixnum

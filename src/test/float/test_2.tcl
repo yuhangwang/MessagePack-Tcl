@@ -9,7 +9,7 @@ proc test {} {
     puts "result = {$result}"
     puts "solution = $solution"
     set num [lindex $result 0]
-    assertApproxEq $num $solution 1.0e-4
+    ::Messagepack::assertApproxEq $num $solution 1.0e-4
     
     set here [file dirname [file normalize [info script]]]
     set output [file join $here "output" "out2.mp"]

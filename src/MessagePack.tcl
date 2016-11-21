@@ -11,6 +11,5 @@ namespace eval ::MessagePack {
     namespace export pack
     namespace export unpack
     namespace export mpread mpsave
-    namespace export assertApproxEq
 }
 source deps/all.tcl 
